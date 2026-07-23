@@ -1,20 +1,20 @@
 # 🏥 Hospital Appointment & Bed Allocation System
 
-A full-stack hospital management system built to demonstrate **concurrency-safe scheduling** — the kind of double-booking, race-condition, and resource-contention problem that shows up in real distributed systems, not just CRUD forms.
+A full-stack hospital management system built to demonstrate **concurrency-safe scheduling** with double-booking, race-condition, and resource-contention problems.
 
-Patients book appointments against live doctor availability, admins manage departments/beds/doctors, and doctors run their day from a live dashboard — all while the system guarantees, at the database level, that two people can never be assigned the same appointment slot or the same hospital bed.
+Patients book appointments against live doctor availability, admins manage departments/beds/doctors, and doctors run their day from a live dashboard, all while the system guarantees, at the database level, that two people can never be assigned the same appointment slot or the same hospital bed.
 
 ---
 
 ##  Features
 
-- **Conflict-free appointment booking** — optimistic locking (`@Version`) plus a database-level `UNIQUE(doctor_id, slot_start)` constraint means a double-booking is not just unlikely, it's structurally impossible, even under concurrent load.
-- **Bed & ward allocation** — pessimistic row-locking (`PESSIMISTIC_WRITE`) safely assigns the next free bed when two receptionists admit patients into the same department at the same instant. Live occupancy view (e.g. *"ICU: 8/10 occupied"*).
-- **Waitlist queue** — if a doctor's day is fully booked, patients join a waitlist and get auto-emailed the moment a cancellation frees up a slot.
-- **Role-based access** — JWT authentication with `PATIENT`, `DOCTOR`, `RECEPTIONIST`, and `ADMIN` roles, each with a purpose-built dashboard.
-- **Doctor dashboard** — today's schedule on a FullCalendar view, patient history, mark visits as completed/no-show.
-- **Admin analytics dashboard** — department load, doctor utilization %, peak booking hours, and live bed occupancy, all charted with Recharts.
-- **Automated email notifications** — booking confirmations, 24-hour appointment reminders (`@Scheduled` cron job), and waitlist alerts, sent via Gmail SMTP.
+- **Conflict-free appointment booking**: optimistic locking (`@Version`) plus a database-level `UNIQUE(doctor_id, slot_start)` constraint means a double-booking is not just unlikely, it's structurally impossible, even under concurrent load.
+- **Bed & ward allocation**: pessimistic row-locking (`PESSIMISTIC_WRITE`) safely assigns the next free bed when two receptionists admit patients into the same department at the same instant. Live occupancy view (e.g. *"ICU: 8/10 occupied"*).
+- **Waitlist queue**: if a doctor's day is fully booked, patients join a waitlist and get auto-emailed the moment a cancellation frees up a slot.
+- **Role-based access**: JWT authentication with `PATIENT`, `DOCTOR`, `RECEPTIONIST`, and `ADMIN` roles, each with a purpose-built dashboard.
+- **Doctor dashboard**: today's schedule on a FullCalendar view, patient history, mark visits as completed/no-show.
+- **Admin analytics dashboard**: department load, doctor utilization %, peak booking hours, and live bed occupancy, all charted with Recharts.
+- **Automated email notifications**: booking confirmations, 24-hour appointment reminders (`@Scheduled` cron job), and waitlist alerts, sent via Gmail SMTP.
 - **Audit trail** — every cancellation, reschedule, and status change is logged with who did it and when.
 
 ---
@@ -28,8 +28,6 @@ Patients book appointments against live doctor availability, admins manage depar
 | Frontend | React 18 + Vite, FullCalendar, Recharts, Axios |
 | Auth | Spring Security + JWT (role-based: Patient / Doctor / Receptionist / Admin) |
 | Email | Gmail SMTP (app password) |
-| CI | GitHub Actions (runs the JUnit test suite on every push) |
-| Deployment | Render (backend), Vercel/Netlify (frontend) — no Docker required |
 
 ---
 
@@ -75,46 +73,7 @@ hospital-system/
 │ ├── pages/ # Login, Register, PatientBooking, DoctorDashboard, AdminDashboard
 │ ├── components/
 │ └── api/ # Shared Axios client
-├── .github/workflows/ # GitHub Actions CI (runs backend tests on push)
-
----
-
-##  Getting started
-
-This repo includes **[SETUP_GUIDE.md](./SETUP_GUIDE.md)** — a complete, step-by-step walkthrough written for someone who has never set up a dev project before. It covers installing every tool, creating free cloud accounts (Neon, Render, Vercel, Gmail), running the app locally, and deploying it live for free. Start there.
-
-**Quick start, if you already have Java 17, Maven, Node, and a Postgres database ready:**
-
-\`\`\`bash
-# Backend
-cd backend
-export DB_URL="jdbc:postgresql://<your-neon-host>/neondb?sslmode=require"
-export DB_USERNAME="<your-db-username>"
-export DB_PASSWORD="<your-db-password>"
-export JWT_SECRET="<a-long-random-string>"
-export GMAIL_USERNAME="<your-gmail-address>"
-export GMAIL_APP_PASSWORD="<your-gmail-app-password>"
-mvn spring-boot:run
-\`\`\`
-
-\`\`\`bash
-# Frontend (separate terminal)
-cd frontend
-npm install
-cp .env.example .env   # set VITE_API_BASE_URL if not localhost:8080
-npm run dev
-\`\`\`
-
----
-
-##  Testing & CI
-
-\`\`\`bash
-cd backend
-mvn test
-\`\`\`
-
-Runs against an in-memory H2 database (see `src/test/resources/application.properties`), so no real Postgres connection is needed for CI. `.github/workflows/backend-ci.yml` runs this automatically on every push and pull request via GitHub Actions.
+└── .github/workflows/ # GitHub Actions CI (runs backend tests on push)
 
 ---
 
