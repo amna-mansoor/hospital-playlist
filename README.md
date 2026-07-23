@@ -55,25 +55,29 @@ Core tables: `users`, `patients`, `doctors`, `departments`, `appointments`, `bed
 
 ---
 
-## 📁 Project structure
+## 📁 Project Structure
+
+```text
 hospital-system/
-├── backend/ # Spring Boot 3 REST API (Java 17)
-│ ├── src/main/java/com/hospital/
-│ │ ├── model/ # JPA entities
-│ │ ├── repository/ # Spring Data JPA repositories
-│ │ ├── service/ # Business logic (booking, beds, waitlist, email, audit)
-│ │ ├── controller/ # REST endpoints
-│ │ ├── security/ # JWT filter + utilities
-│ │ ├── config/ # Spring Security configuration
-│ │ ├── scheduled/ # @Scheduled reminder job
-│ │ └── dto/ # Request/response payloads
-│ └── src/test/ # JUnit smoke test + H2 test config
-├── frontend/ # React + Vite SPA
-│ └── src/
-│ ├── pages/ # Login, Register, PatientBooking, DoctorDashboard, AdminDashboard
-│ ├── components/
-│ └── api/ # Shared Axios client
-└── .github/workflows/ # GitHub Actions CI (runs backend tests on push)
+├── backend/                         # Spring Boot 3 REST API (Java 17)
+│   ├── src/main/java/com/hospital/
+│   │   ├── model/                   # JPA entities
+│   │   ├── repository/              # Spring Data JPA repositories
+│   │   ├── service/                 # Business logic (booking, beds, waitlist, email, audit)
+│   │   ├── controller/              # REST endpoints
+│   │   ├── security/                # JWT Filter + utilities
+│   │   ├── config/                  # Spring Security configuration
+│   │   ├── scheduled/               # @Scheduled reminder job
+│   │   └── dto/                     # Request/response payloads
+│   └── src/test/                    # JUnit smoke test + H2 test config
+├── frontend/                        # React + Vite SPA
+│   └── src/
+│       ├── pages/                   # Login, Register, PatientBooking, DoctorDashboard, AdminDashboard
+│       ├── components/
+│       └── api/                     # Shared Axios client
+└── .github/
+    └── workflows/                   # GitHub Actions CI (runs backend tests on push)
+```
 
 ---
 
