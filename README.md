@@ -24,7 +24,7 @@ Patients book appointments against live doctor availability, admins manage depar
 | Layer | Technology |
 |---|---|
 | Backend | Java 17, Spring Boot 3 (Web, Data JPA, Validation, Security) |
-| Database | PostgreSQL (Neon / Supabase free tier) |
+| Database | PostgreSQL (Neon) |
 | Frontend | React 18 + Vite, FullCalendar, Recharts, Axios |
 | Auth | Spring Security + JWT (role-based: Patient / Doctor / Receptionist / Admin) |
 | Email | Gmail SMTP (app password) |
