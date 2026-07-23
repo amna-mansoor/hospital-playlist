@@ -1,13 +1,12 @@
-import { BrowserRouter, Routes, Route, Link, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, Navigate, useLocation } from 'react-router-dom';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
 import PatientBooking from './pages/PatientBooking.jsx';
 import DoctorDashboard from './pages/DoctorDashboard.jsx';
 import AdminDashboard from './pages/AdminDashboard.jsx';
 
-function getRole() {
-  return localStorage.getItem('role');
-}
+function getRole() { return localStorage.getItem('role'); }
+function getFullName() { return localStorage.getItem('fullName'); }
 
 function ProtectedRoute({ role, children }) {
   const currentRole = getRole();
@@ -30,26 +29,39 @@ function logout() {
   window.location.href = '/login';
 }
 
-export default function App() {
+function TopNav() {
   const role = getRole();
+  const fullName = getFullName();
+  const location = useLocation();
+  const isActive = (path) => location.pathname === path;
 
   return (
-    <BrowserRouter>
-      <nav>
-        <strong>🏥 Hospital System</strong>
-        {role === 'PATIENT' && <Link to="/book">Book Appointment</Link>}
-        {role === 'DOCTOR' && <Link to="/doctor">My Schedule</Link>}
-        {role === 'ADMIN' && <Link to="/admin">Admin Dashboard</Link>}
-        {role ? (
-          <a href="#" onClick={logout} style={{ marginLeft: 'auto' }}>Log out</a>
+    <nav>
+      <span className="brand">🏥 Hospital System</span>
+      {role === 'PATIENT' && <Link to="/book" className={isActive('/book') ? 'active' : ''}>Book Appointment</Link>}
+      {role === 'DOCTOR' && <Link to="/doctor" className={isActive('/doctor') ? 'active' : ''}>My Schedule</Link>}
+      {role === 'ADMIN' && <Link to="/admin" className={isActive('/admin') ? 'active' : ''}>Admin Dashboard</Link>}
+      <div className="greeting">
+        {fullName ? (
+          <>
+            <span>Hi, <strong>{fullName}</strong> <span style={{ opacity: 0.6 }}>({role?.toLowerCase()})</span></span>
+            <a className="logout-link" onClick={logout}>Log out</a>
+          </>
         ) : (
           <>
-            <Link to="/login" style={{ marginLeft: 'auto' }}>Login</Link>
+            <Link to="/login">Login</Link>
             <Link to="/register">Register</Link>
           </>
         )}
-      </nav>
+      </div>
+    </nav>
+  );
+}
 
+export default function App() {
+  return (
+    <BrowserRouter>
+      <TopNav />
       <div className="container">
         <Routes>
           <Route path="/" element={<Home />} />

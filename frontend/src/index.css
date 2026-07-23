@@ -1,41 +1,167 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 :root {
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  color-scheme: light;
+  --primary: #0f766e;
+  --primary-dark: #0d5c56;
+  --accent: #2563eb;
+  --bg: #f1f5f4;
+  --card-bg: #ffffff;
+  --text: #1e2a2a;
+  --text-muted: #5b6b6a;
+  --border: #e2e8e7;
+  --success-bg: #dcfce7;
+  --success-text: #166534;
+  --danger-bg: #fee2e2;
+  --danger-text: #991b1b;
+  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
 }
+
+* { box-sizing: border-box; }
+
 body {
   margin: 0;
-  background: #f4f6f8;
-  color: #1a1a1a;
+  background: var(--bg);
+  color: var(--text);
 }
+
 .container {
-  max-width: 960px;
+  max-width: 1000px;
   margin: 0 auto;
-  padding: 24px;
+  padding: 28px 24px 60px;
 }
+
 .card {
-  background: white;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px;
+  box-shadow: 0 1px 2px rgba(15, 23, 22, 0.04);
   margin-bottom: 20px;
 }
+
+h2 { font-weight: 700; letter-spacing: -0.01em; }
+h3 { font-weight: 600; color: var(--text); }
+
 input, select, button {
+  font-family: inherit;
   font-size: 15px;
-  padding: 8px 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
   margin: 4px 0;
 }
+
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+}
+
 button {
-  background: #2563eb;
+  background: var(--primary);
   color: white;
   border: none;
   cursor: pointer;
+  font-weight: 600;
+  transition: background 0.15s ease;
 }
-button:hover { background: #1d4ed8; }
-.error { color: #b91c1c; }
-.badge { padding: 2px 8px; border-radius: 12px; font-size: 12px; }
-.badge.free { background: #dcfce7; color: #166534; }
-.badge.taken { background: #fee2e2; color: #991b1b; }
-nav { background: white; padding: 12px 24px; display: flex; gap: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-nav a { text-decoration: none; color: #2563eb; font-weight: 500; }
+button:hover { background: var(--primary-dark); }
+button:disabled { background: #cbd5d4; cursor: not-allowed; }
+
+.error {
+  color: var(--danger-text);
+  background: var(--danger-bg);
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+.success-msg {
+  color: var(--success-text);
+  background: var(--success-bg);
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.badge {
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.badge.free { background: var(--success-bg); color: var(--success-text); }
+.badge.taken { background: var(--danger-bg); color: var(--danger-text); }
+
+/* --- Top nav --- */
+nav {
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 28px;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+nav .brand {
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--primary-dark);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+nav a {
+  text-decoration: none;
+  color: var(--text-muted);
+  font-weight: 500;
+  font-size: 14px;
+  padding: 6px 4px;
+  border-bottom: 2px solid transparent;
+}
+nav a.active, nav a:hover { color: var(--primary-dark); border-bottom-color: var(--primary); }
+nav .greeting {
+  margin-left: auto;
+  font-size: 14px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+nav .logout-link { color: var(--danger-text); cursor: pointer; font-weight: 500; }
+
+/* --- Doctor info card on booking page --- */
+.doctor-info-card {
+  background: linear-gradient(135deg, #0f766e 0%, #115e59 100%);
+  color: white;
+  border-radius: 12px;
+  padding: 18px 22px;
+  margin-bottom: 20px;
+}
+.doctor-info-card .name { font-size: 18px; font-weight: 700; }
+.doctor-info-card .meta { font-size: 13px; opacity: 0.9; margin-top: 4px; }
+
+/* --- Slot grid --- */
+.slot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+}
+.slot-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 6px;
+}
+.slot-btn.taken { background: #94a3a2; }
+
+/* --- Stat tiles --- */
+.stat-tile {
+  min-width: 160px;
+  text-align: center;
+}
+.stat-tile .value { font-size: 26px; font-weight: 700; color: var(--primary-dark); }
+.stat-tile .label { font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.03em; }
+
+table { border-collapse: collapse; width: 100%; }
+th { text-align: left; color: var(--text-muted); font-size: 13px; text-transform: uppercase; letter-spacing: 0.03em; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+td { border-bottom: 1px solid var(--border); padding: 10px 8px; font-size: 14px; }

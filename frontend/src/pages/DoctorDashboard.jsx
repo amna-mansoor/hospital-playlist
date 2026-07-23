@@ -7,12 +7,17 @@ import api from '../api/api.js';
 
 export default function DoctorDashboard() {
   const [appointments, setAppointments] = useState([]);
+  const [myInfo, setMyInfo] = useState(null);
   const [error, setError] = useState('');
 
   async function load() {
     try {
-      const res = await api.get('/api/doctors/dashboard/today');
-      setAppointments(res.data);
+      const [scheduleRes, meRes] = await Promise.all([
+        api.get('/api/doctors/dashboard/today'),
+        api.get('/api/doctors/me'),
+      ]);
+      setAppointments(scheduleRes.data);
+      setMyInfo(meRes.data);
     } catch (err) {
       setError(err.response?.data?.error || 'Could not load schedule.');
     }
@@ -29,7 +34,6 @@ export default function DoctorDashboard() {
     }
   }
 
-  // Convert appointments into FullCalendar's event format
   const events = appointments.map(a => ({
     id: a.id,
     title: `${a.patient?.user?.fullName || 'Patient'} (${a.status})`,
@@ -43,6 +47,17 @@ export default function DoctorDashboard() {
       <h2>Today's Schedule</h2>
       {error && <p className="error">{error}</p>}
 
+      {myInfo && (
+        <div className="doctor-info-card">
+          <div className="name">{myInfo.fullName}</div>
+          <div className="meta">
+            {myInfo.specialization} &middot; {myInfo.departmentName} Department &middot;{' '}
+            {myInfo.shiftStart?.slice(0,5)} – {myInfo.shiftEnd?.slice(0,5)}
+            {myInfo.onLeave && ' · Currently on leave'}
+          </div>
+        </div>
+      )}
+
       <div className="card">
         <FullCalendar
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -55,8 +70,8 @@ export default function DoctorDashboard() {
 
       <div className="card">
         <h3>Mark Appointments</h3>
-        <table width="100%" cellPadding="8">
-          <thead><tr><th align="left">Patient</th><th align="left">Time</th><th align="left">Status</th><th></th></tr></thead>
+        <table>
+          <thead><tr><th>Patient</th><th>Time</th><th>Status</th><th></th></tr></thead>
           <tbody>
             {appointments.map(a => (
               <tr key={a.id}>

@@ -1,5 +1,6 @@
 package com.hospital.controller;
 
+import com.hospital.dto.DoctorInfoDto;
 import com.hospital.model.Appointment;
 import com.hospital.repository.AppointmentRepository;
 import com.hospital.repository.DoctorRepository;
@@ -19,6 +20,34 @@ public class DoctorController {
     private final DoctorRepository doctorRepository;
     private final AppointmentRepository appointmentRepository;
     private final UserRepository userRepository;
+
+    /** List every doctor — used by the patient booking page to build a picker. */
+    @GetMapping
+    public List<DoctorInfoDto> listAll() {
+        return doctorRepository.findAll().stream()
+                .map(DoctorInfoDto::from)
+                .toList();
+    }
+
+    /** A single doctor's public info — used once a patient picks one, to show name/department. */
+    @GetMapping("/{id}")
+    public DoctorInfoDto getOne(@PathVariable Long id) {
+        return DoctorInfoDto.from(
+                doctorRepository.findById(id).orElseThrow(() -> new RuntimeException("Doctor not found"))
+        );
+    }
+
+    /** The logged-in doctor's own profile — used by the Doctor Dashboard to show their department. */
+    @GetMapping("/me")
+    public DoctorInfoDto myProfile(Authentication auth) {
+        Long userId = userRepository.findByEmail(auth.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"))
+                .getId();
+        return DoctorInfoDto.from(
+                doctorRepository.findByUserId(userId)
+                        .orElseThrow(() -> new RuntimeException("Doctor profile not found"))
+        );
+    }
 
     @GetMapping("/dashboard/today")
     public List<Appointment> todaysSchedule(Authentication auth) {
